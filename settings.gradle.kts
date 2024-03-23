@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "WhatNew"
 include(":app")
- 
+include(":whatsnew")
