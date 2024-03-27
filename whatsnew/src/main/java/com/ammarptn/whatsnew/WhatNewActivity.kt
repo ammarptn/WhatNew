@@ -15,6 +15,8 @@ import com.ammarptn.whatsnew.ui.theme.WhatNewTheme
 class WhatNewActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val packageName = intent.getStringExtra("package_name")
+        val version = intent.getStringExtra("version")
         setContent {
             WhatNewTheme {
                 // A surface container using the 'background' color from the theme
@@ -22,7 +24,7 @@ class WhatNewActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    packageName?.let { Greeting(it) }
                 }
             }
         }

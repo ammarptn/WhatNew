@@ -14,6 +14,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intent = Intent(applicationContext,WhatNewActivity::class.java)
+        intent.putExtra("package_name","com.ammarptn.willow.digital.watch.face")
+        intent.putExtra("version","1.0.0")
         startActivity(intent)
     }
 }
