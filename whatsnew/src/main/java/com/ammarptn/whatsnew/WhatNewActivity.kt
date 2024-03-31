@@ -1,48 +1,39 @@
 package com.ammarptn.whatsnew
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.ammarptn.whatsnew.ui.theme.WhatNewTheme
+import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.viewpager.widget.ViewPager
+import com.ammarptn.whatsnew.api.model.DataResponse
 
-class WhatNewActivity : ComponentActivity() {
+class WhatNewActivity : AppCompatActivity(),DataContractor.View {
+    lateinit var presenter: DataPresenter
+    lateinit var packetName: String
+    lateinit var version: String
+    lateinit var customAdapter: CustomAdapter
+    lateinit var viewPager: ViewPager
+    lateinit var titleView: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val packageName = intent.getStringExtra("package_name")
-        val version = intent.getStringExtra("version")
-        setContent {
-            WhatNewTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    packageName?.let { Greeting(it) }
-                }
-            }
-        }
+        setContentView(R.layout.activity_what_new)
+        val bundle: Bundle? = intent.extras
+        packetName = bundle!!.getString("package_name").toString()
+        version = bundle!!.getString("version").toString()
+        titleView = findViewById(R.id.title)
+        viewPager = findViewById(R.id.viewPager)
+        presenter = DataPresenter(this)
+        presenter.getData(this,packetName,version)
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    override fun success(dataResponse: DataResponse) {
+        titleView.text = dataResponse.title
+        viewPager.adapter = CustomAdapter(dataResponse.data, this@WhatNewActivity)
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    WhatNewTheme {
-        Greeting("Android")
+    override fun fail(responseMessage: String?) {
+        TODO("Not yet implemented")
     }
 }
